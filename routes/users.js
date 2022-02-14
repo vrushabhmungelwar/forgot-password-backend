@@ -15,7 +15,10 @@ router.post("/", async (req, res) => {
     if (user)
       return res
         .status(400)
-        .send({ message: "User with given email already exist!" });
+        .send({
+          success: false,
+          message: "User with given email already exist!",
+        });
 
     let hashedPassword = await genPassword(req.body.password);
 
@@ -33,7 +36,10 @@ router.post("/", async (req, res) => {
     const message = `${process.env.BASE_URL}signup/verify/${user._id}/${token.token}`;
     await sendEmail(user.email, "Verify Email", message);
 
-    res.send({ message: "An Email sent to your account please verify" });
+    res.send({
+      success: true,
+      message: "An Email sent to your account please verify",
+    });
   } catch (error) {
     res.status(400).send(error.message);
   }
