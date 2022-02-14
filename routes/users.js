@@ -4,18 +4,20 @@ const { User, validate } = require("../models/user");
 const express = require("express");
 const shortId = require("shortid");
 const router = express.Router();
-const {genPassword} = require("../helper")
+const { genPassword } = require("../helper");
 router.post("/", async (req, res) => {
   try {
     const { error } = validate(req.body);
-    console.log(error)
+    console.log(error);
     if (error) return res.status(400).send(error.details[0].message);
 
     let user = await User.findOne({ email: req.body.email });
     if (user)
-      return res.status(400).send("User with given email already exist!");
+      return res
+        .status(400)
+        .send({ message: "User with given email already exist!" });
 
-      let hashedPassword = await genPassword(req.body.password);
+    let hashedPassword = await genPassword(req.body.password);
 
     user = await new User({
       name: req.body.name,
@@ -31,7 +33,7 @@ router.post("/", async (req, res) => {
     const message = `${process.env.BASE_URL}signup/verify/${user._id}/${token.token}`;
     await sendEmail(user.email, "Verify Email", message);
 
-    res.send("An Email sent to your account please verify");
+    res.send({ message: "An Email sent to your account please verify" });
   } catch (error) {
     res.status(400).send(error.message);
   }

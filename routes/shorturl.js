@@ -3,8 +3,6 @@ const router = express.Router();
 const ShortUrl = require("../models/shortSchema");
 const shortId = require("shortid");
 
-
-
 router.get("/", async (req, res) => {
     const shortUrls = await ShortUrl.find();
     res.send(shortUrls);
