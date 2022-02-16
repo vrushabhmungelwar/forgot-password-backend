@@ -50,7 +50,9 @@ router.get("/resetpassword/:id/:token", async (req, res) => {
     });
     if (!token) return res.status(400).send("Invalid link");
 
-    res.writeHead(301, { Location: "https://xenodochial-curie-f10544.netlify.app/#/resetpassword" });
+    res.writeHead(301, {
+      Location: "https://xenodochial-curie-f10544.netlify.app/#/resetpassword",
+    });
     res.end();
   } catch (error) {
     res.status(400).send("An error occured");
@@ -72,7 +74,10 @@ router.post("/resetpassword/:id/:token", async (req, res) => {
     if (payload) {
       let hashedPassword = await genPassword(req.body.password);
 
-      await User.updateOne({ _id: user._id, password: hashedPassword });
+      await User.updateOne(
+        { _id: user._id },
+        { $set: { password: hashedPassword } }
+      );
       await Token.findByIdAndRemove(token._id);
       res.send({ success: true, message: "successfull" });
     }
