@@ -51,7 +51,7 @@ router.get("/resetpassword/:id/:token", async (req, res) => {
     if (!token) return res.status(400).send("Invalid link");
 
     res.writeHead(301, {
-      Location: "https://xenodochial-curie-f10544.netlify.app/#/resetpassword",
+      Location: `https://xenodochial-curie-f10544.netlify.app/#/resetpassword/${token}`,
     });
     res.end();
   } catch (error) {
