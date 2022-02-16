@@ -13,12 +13,10 @@ router.post("/", async (req, res) => {
 
     let user = await User.findOne({ email: req.body.email });
     if (user)
-      return res
-        .status(400)
-        .send({
-          success: false,
-          message: "User with given email already exist!",
-        });
+      return res.status(400).send({
+        success: false,
+        message: "User with given email already exist!",
+      });
 
     let hashedPassword = await genPassword(req.body.password);
 
@@ -56,12 +54,12 @@ router.get("/verify/:id/:token", async (req, res) => {
     });
     if (!token) return res.status(400).send("Invalid link");
 
-    await User.updateOne({ _id: user._id, verified: true });
+    await User.updateOne({ _id: user._id }, { $set: { verified: true } });
     await Token.findByIdAndRemove(token._id);
 
     res.send("email verified sucessfully");
   } catch (error) {
-    res.status(400).send("Error");
+    res.status(400).send(error.message);
   }
 });
 
