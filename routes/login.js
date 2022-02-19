@@ -25,7 +25,9 @@ router.post("/", async (request, response) => {
   const isPasswordMatch = await bcrypt.compare(password, storedPassword);
 
   if (isPasswordMatch) {
-    const token = jwt.sign({ id: userFromDB._id }, process.env.SECRET_KEY);
+    const token = jwt.sign({ id: userFromDB._id }, process.env.SECRET_KEY, {
+      expiresIn: "1d",
+    });
     success = true;
     response.send({ success, message: "Successful login", token: token });
     // console.log(userFromDB);
